@@ -1,30 +1,101 @@
 #include <iostream>
 #include <vector>
+#include <unistd.h>
 #include <string>
 #include <thread>
 #include <chrono>
+#include <random>
+#include <fcntl.h>
 
 
+/* Function Prototype */
 std::vector< std::vector<std::string> > renderBox(int width,int height);
 void displayCanvas (std::vector< std::vector<std::string> >& matrixBox);
+void clearScreen();
+void setup();
+
+
+
+/* Global constant */
+const int width = 20;
+const int height = 20;
+
+
+/* Global Variable */
+int x_position;
+int y_position;
+int fruit_x_position;
+int fruit_y_position;
+int score;
+int nTail;
+enum Direction = {STOP =0, LEFT, RIGHT, UP, DOWN};
+Direction dir;
+bool gameOver;
+
 
 
 int main(){
 
     
-   std::vector< std::vector<std::string> > matrixBox = renderBox(30,30);
+   std::vector< std::vector<std::string> > matrixBox = renderBox(20,20);
+   setup();
+
+   int count=0;
 
 
-    while(1){
-        displayCanvas(matrixBox);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while(!gameOver){
+
+          
+           displayCanvas(matrixBox);
+           input();
+           logic();
+           
+
     }
+
+   
 
    
 
 
 
     return 0;
+}
+
+
+
+
+
+
+void input(){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+void setup(){
+    gameOver=false;
+    dir = STOP;
+    x = width / 2;
+    y = width / 2;
+
+
+    srand(time(0));
+    fruit_x_position = rand() % width;
+    fruit_y_position = rand() % height;
+    score = 0;
+
+
+
 }
 
 
@@ -43,8 +114,7 @@ return matrixBox;
 }
 
 void displayCanvas (std::vector< std::vector<std::string> >& matrixBox){
-    std::cout << "\033[2J";     
-    std::cout << "\033[0;0H";
+   clearScreen();
     for (size_t i=0; i< matrixBox.size(); i++){
        for (size_t j=0; j< matrixBox[i].size();j++){
            std::cout<< matrixBox[i][j] << " ";
@@ -52,4 +122,12 @@ void displayCanvas (std::vector< std::vector<std::string> >& matrixBox){
        std::cout << std::endl;
     }
 
+}
+
+void clearScreen(){
+    std::cout << "\033[2J\033[H";
+}
+
+void setup(){
+    gameOver = false;
 }
